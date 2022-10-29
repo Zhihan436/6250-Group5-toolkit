@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+ 
+	<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PP1 ToolKit Assignment Group Five :: w3layouts</title>
+    <style>  
+      body {
+        margin: 0;
+      }
+    </style>
+  </head>
+	<body>
+    <h1> Toolkit1---responsible innovation:</h1>
+    <h2> HARM ASSESSMENT </h2>
+    <div> <p>HARM ASSESSMENT是一个帮助科技创新者有效的建立负责任的创新，
+      评估创新科技可能的有害影响，并且对有害影响进行有效管理。
+      HARM ASSESSMENT inform prioritization of responsible innovation mitigations，
+      从而有效的制定预防方案。</p> </div>
+    <div> <h3> Step 1: Define the purpose</h3> </div>
+    <div> <p> 这个科技会解决什么样的问题: </p> 
+    <input type="text" value="Type here" onfocus="this.value = '';" 
+    onblur="if (this.value == '') {this.value = 'Type here';}" required="">
+    </div>
+    <div> <p> 问题解决的主要受益人是谁: </p> 
+   <input type="text" value="Type here" onfocus="this.value = '';" 
+    onblur="if (this.value == '') {this.value = 'Type here';}" required="" id = "000">
+    </div>
+    <div> <p> 这个科技未来可能会激发哪方面的新发展: </p> 
+    <input type="text" value="Type here" onfocus="this.value = '';" 
+    onblur="if (this.value == '') {this.value = 'Type here';}" required="">
+    </div>
+    <div> <p> 这些新发展的主要受益人是谁: </p> 
+    <input type="text" value="Type here" onfocus="this.value = '';" 
+    onblur="if (this.value == '') {this.value = 'Type here';}" required="" id = "001">
+    </div>
+    
+    <div> <h3> Step 2: Describe use-cases</h3> </div>
+    <div> <p> 这个科技会在什么情况下被使用: </p> 
+    <input type="text" value="Type here" onfocus="this.value = '';" 
+    onblur="if (this.value == '') {this.value = 'Type here';}" required="">
+    </div>
+    <div> <p> 在这些情况下都有哪些利益相关者: </p> 
+    <input type="text" value="Type here" onfocus="this.value = '';" 
+    onblur="if (this.value == '') {this.value = 'Type here';}" required="" id = "002">
+    </div>
+
+    <div> <h3> Step 3: Find the stakeholders</h3> 
+    <div>
+      <button type="0" onclick="printSH()"> Show Stakeholders get in the previous steps</button>
+      </div>
+    
+    
+    <p id = "SH0">问题解决的主要受益人:  </p>
+    <p id = "SH1">新发展的主要受益人是:  </p>
+    <p id = "SH2">这些情况下都有哪些利益相关者:   </p>
+  
+    </div>
+    <script type="text/javascript">
+      function printSH(){
+        document.getElementById("SH0").innerHTML = "问题解决的主要受益人: " + document.getElementById("000").value;
+        document.getElementById("SH1").innerHTML = "新发展的主要受益人是: "+ document.getElementById("001").value;
+        document.getElementById("SH2").innerHTML = "这些情况下都有哪些利益相关者: "+ document.getElementById("002").value;
+      }
+    </script>
+   
+     <p> 分析并得出其他的利益相关者  </p>
+     <ul>
+        <li>受此科技影响的人</li>
+        <input type="text" value="Type here" onfocus="this.value = '';" 
+    onblur="if (this.value == '') {this.value = 'Type here';}" required="" id = "003">
+        <li>会影响此科技的人</li>
+        <input type="text" value="Type here" onfocus="this.value = '';" 
+    onblur="if (this.value == '') {this.value = 'Type here';}" required="" id = "004">
+      </ul> 
+
+     
+		
+  </body>
+  <h2>
+	 <a href="canvas.html">Use tool to assess>.
+   </h2>
+
+  
+
+
+ 
+ 
+
+ 
+</html>

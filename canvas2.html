@@ -1,0 +1,351 @@
+<!doctype html>
+<html>
+<head>
+ <meta charset="utf-8">
+<link rel="stylesheet" type="text/css" media="all" href="css/reset.css" /> <!-- reset css -->
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+<style>
+    body{ background-color: ivory; }
+    #canvas{border:1px solid red;}
+    #theText{width:10em;}
+</style>
+<script>
+$(function(){
+
+    // canvas related variables
+    var canvas=document.getElementById("canvas");
+    var ctx=canvas.getContext("2d");
+
+    // variables used to get mouse position on the canvas
+    var $canvas=$("#canvas");
+    var canvasOffset=$canvas.offset();
+    var offsetX=canvasOffset.left;
+    var offsetY=canvasOffset.top;
+    var scrollX=$canvas.scrollLeft();
+    var scrollY=$canvas.scrollTop();
+
+    // variables to save last mouse position
+    // used to see how far the user dragged the mouse
+    // and then move the text by that distance
+    var startX;
+    var startY;
+
+    // an array to hold text objects
+    var texts=[];
+
+    // this var will hold the index of the hit-selected text
+    var selectedText=-1;
+
+    // clear the canvas & redraw all texts
+    function draw(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        for(var i=0;i<texts.length;i++){
+            var text=texts[i];
+            ctx.fillText(text.text,text.x,text.y);
+            
+        }
+        
+        
+		drawAxes();
+		drawAxisLabels();
+    }
+
+    // test if x,y is inside the bounding box of texts[textIndex]
+    function textHittest(x,y,textIndex){
+        var text=texts[textIndex];
+        return(x>=text.x && 
+            x<=text.x+text.width &&
+            y>=text.y-text.height && 
+            y<=text.y);
+    }
+
+    // handle mousedown events
+    // iterate through texts[] and see if the user
+    // mousedown'ed on one of them
+    // If yes, set the selectedText to the index of that text
+    function handleMouseDown(e){
+      e.preventDefault();
+      startX=parseInt(e.clientX-offsetX);
+      startY=parseInt(e.clientY-offsetY);
+      // Put your mousedown stuff here
+      for(var i=0;i<texts.length;i++){
+          if(textHittest(startX,startY,i)){
+              selectedText=i;
+          }
+          
+      }
+    }
+
+    // done dragging
+    function handleMouseUp(e){
+      e.preventDefault();
+      selectedText=-1;
+    }
+
+    // also done dragging
+    function handleMouseOut(e){
+      e.preventDefault();
+      selectedText=-1;
+    }
+
+    // handle mousemove events
+    // calc how far the mouse has been dragged since
+    // the last mousemove event and move the selected text
+    // by that distance
+    function handleMouseMove(e){
+      if(selectedText<0){return;}
+      e.preventDefault();
+      mouseX=parseInt(e.clientX-offsetX);
+      mouseY=parseInt(e.clientY-offsetY);
+
+      // Put your mousemove stuff here
+      var dx=mouseX-startX;
+      var dy=mouseY-startY;
+      startX=mouseX;
+      startY=mouseY;
+
+      var text=texts[selectedText];
+      text.x+=dx;
+      text.y+=dy;
+      draw();
+    }
+
+    // listen for mouse events
+    $("#canvas").mousedown(function(e){handleMouseDown(e);});
+    $("#canvas").mousemove(function(e){handleMouseMove(e);});
+    $("#canvas").mouseup(function(e){handleMouseUp(e);});
+    $("#canvas").mouseout(function(e){handleMouseOut(e);});
+
+    $("#submit").click(function(){
+
+        // calc the y coordinate for this text on the canvas
+        var y=texts.length*20+20;
+
+        // get the text from the input element
+        var text={text:$("#theText").val(),x:150,y:y};
+
+        // calc the size of this text for hit-testing purposes
+        ctx.font="20px verdana";
+        ctx.fillStyle = 'red';
+        text.width=ctx.measureText(text.text).width;
+        text.height=16;
+        
+
+        // put this new text in the texts array
+        texts.push(text);
+
+        // redraw everything
+        draw();
+
+    });
+
+
+}); // end $(function(){});
+</script>
+</head>
+
+<div> <h3> Step 3: Understand your key Stakeholders</h3> 
+    <div>
+        <ul>
+            <li>
+                High power, highly interested people (Manage Closely): you must fully engage these people, 
+                and make the greatest efforts to satisfy them.
+            </li>
+            <li>
+                High power, less interested people (Keep Satisfied): 
+                put enough work in with these people to keep them satisfied, 
+                but not so much that they become bored with your message.
+            </li>
+            <li>
+                Low power, highly interested people (Keep Informed): adequately inform these people, 
+                and talk to them to ensure that no major issues are arising. 
+                People in this category can often be very helpful with the detail of your project.
+            </li>
+            <li>
+                Low power, less interested people (Monitor): again, monitor these people, 
+                but don’t bore them with excessive communication.
+             </li>
+        </ul>
+    </div>
+
+
+<body>
+    <input id="theText" type="text">
+    <button id="submit">Input Stakeholders</button><br>
+    <canvas id="canvas" width=500 height=500></canvas>
+</body>
+
+
+<body>
+<script type="text/javascript">
+
+var canvas = document.getElementById("canvas");
+		var context = canvas.getContext("2d");
+		 //水平标尺与canvas的距离
+		var HORIZONTAL_AXIS_MARGIN = 30;
+		 //竖直标尺与canvas的距离
+		var VERTICAL_AXIS_MARGIN = 30;
+		 //标尺起点
+		var AXIS_ORIGIN = {
+			x: HORIZONTAL_AXIS_MARGIN,
+			y: canvas.height - VERTICAL_AXIS_MARGIN
+		};
+		 //坐标的顶部
+		var AXIS_TOP = VERTICAL_AXIS_MARGIN;
+		 //坐标的长度
+		var AXIS_RIGHT = canvas.width - HORIZONTAL_AXIS_MARGIN;
+		 //小标记的间隔
+		var HORIZONTAL_TICK_SPACING = 10;
+		var VERTICAL_TICK_SPACING = 10;
+		 //坐标标记的范围
+		var AXIS_WIDTH = AXIS_RIGHT - AXIS_ORIGIN.x;
+		var AXIS_HEIGHT = AXIS_ORIGIN.y - AXIS_TOP;
+		 //纵向标记数值
+		var NUM_VERTICAL_TICKS = AXIS_HEIGHT / VERTICAL_TICK_SPACING;
+		 //横向标记数值
+		var NUM_HORIZONTAL_TICKS = AXIS_WIDTH / HORIZONTAL_TICK_SPACING;
+		var TICK_WIDTH = 10;
+		 //标牌和坐标轴之间的距离
+		var SPACE_BETWEEN_ABELS_AND_AXIS = 20;
+
+		
+		function drawAxes() {
+			context.save();
+			context.lineWidth = 1.0;
+			//context.fillStyle = "rgba(100, 140, 230, 0.8)";
+            
+			context.strokeStyle = "navy";
+			drawHorizontalAxis();
+			drawVerticalAxis();
+            drawCross1();
+            drawCross2();
+            drawAxisWord();
+            drawBackground();
+            changeColor();
+			context.lineWidth = 0.5;
+			context.strokeStyle = "navy";
+			context.strokeStyle = "darkred";
+			drawVerticalAxisTicks();
+			drawHorizontalAxisTicks();
+			context.restore();
+            
+		}
+        function drawAxisWord(){
+            context.fillStyle = "rgba(100, 140, 230, 0.8)";
+            context.font="10x Arial";
+            context.fillText("High",3,50);	
+            context.fillText("Low",5,450);	
+            context.fillText("High",450,485);	
+            context.fillText("Low",50,485);
+            context.fillText("Interest",235,485);
+            context.fillText("Power",2,24);
+        }
+        function drawBackground(){
+            context.fillStyle = "rgba(100, 140, 230, 0.8)";
+            context.font="20px Arial";
+		    context.fillText("Manage Closely",300,140);
+            context.fillText("Keep Satisfied",60,140);	
+            context.fillText("Monitor",100,360);	
+            context.fillText("Keep Informed",280,360);	
+        }
+        function changeColor(){
+            context.fillStyle = "red";
+        }
+
+        function drawCross1() {
+			context.beginPath();
+			context.moveTo(30,250);
+            context.lineTo(470,250);
+            context.stroke();
+		}
+        function drawCross2() {
+			context.beginPath();
+			context.moveTo(250,30);
+            context.lineTo(250,470);
+            context.stroke();
+		}
+        //画竖直线
+		function drawVerticalAxis() {
+			context.beginPath();
+			context.moveTo(AXIS_ORIGIN.x, AXIS_ORIGIN.y);
+			context.lineTo(AXIS_ORIGIN.x, AXIS_TOP);
+			context.stroke();
+      
+		}
+        function drawHorizontalAxis() {
+			context.beginPath();
+			context.moveTo(AXIS_ORIGIN.x, AXIS_ORIGIN.y);
+			context.lineTo(AXIS_RIGHT, AXIS_ORIGIN.y);
+			context.stroke();
+		}
+        function drawVerticalAxisLabels() {
+			context.textAlign = "center";
+			context.textBaseline = "top";
+			for (var i = 0; i <= NUM_HORIZONTAL_TICKS; i++) {
+				if (i % 5 === 0) {
+					context.fillText(i,
+						AXIS_ORIGIN.x + i * HORIZONTAL_TICK_SPACING,
+						AXIS_ORIGIN.y + SPACE_BETWEEN_ABELS_AND_AXIS);
+				}
+			}
+		}
+			//绘制水平轴标注
+ 
+		function drawHorizontalAxisLabels() {
+			context.textAlign = "center";
+			context.textBaseline = "middle";
+			for (var i = 0; i <= NUM_VERTICAL_TICKS; i++) {
+				if (i % 5 === 0) {
+					context.fillText(i,
+						AXIS_ORIGIN.x - SPACE_BETWEEN_ABELS_AND_AXIS,
+						AXIS_ORIGIN.y - i * VERTICAL_TICK_SPACING);
+				}
+			}
+		}
+
+        function drawGrid(color, stepx, stepy) {
+			context.save()
+			context.strokeStyle = color;
+			context.fillStyle = '#ffffff';
+			context.lineWidth = 0.5;
+			context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+			for (var i = stepx + 0.5; i < context.canvas.width; i += stepx) {
+				context.beginPath();
+				context.moveTo(i, 0);
+				context.lineTo(i, context.canvas.height);
+				context.stroke();
+			}
+			for (var i = stepy + 0.5; i < context.canvas.height; i += stepy) {
+				context.beginPath();
+				context.moveTo(0, i);
+				context.lineTo(context.canvas.width, i);
+				context.stroke();
+			}
+			context.restore();
+		}
+		
+
+       
+		
+		context.shadowColor = "rgba(100, 140, 230, 0.8)";
+		context.shadowOffsetX = 3;
+		context.shadowOffsetY = 3;
+		context.shadowBlur = 5;
+		
+		drawAxes();
+		drawAxisLabels();
+        
+
+    
+
+     
+        
+		
+		
+		
+</script>
+
+
+
+</body>
+</html>
